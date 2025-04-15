@@ -71,7 +71,10 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>$(SolutionDir)ConsoleApp1\bin\$(Configuration)\net8.0\$(Platform)\</OutDir>
+    <OutDir>$(SolutionDir)bin\$(Configuration)\net8.0\$(Platform)\</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(SolutionDir)bin\$(Configuration)\net8.0\$(Platform)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -120,7 +123,7 @@
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <ModuleDefinitionFile>Dll1.def</ModuleDefinitionFile>
+      <ModuleDefinitionFile>Unmanaged.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -140,6 +143,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
+      <ModuleDefinitionFile>Unmanaged.def</ModuleDefinitionFile>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -156,7 +160,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Dll1.def" />
+    <None Include="Unmanaged.def" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -2,7 +2,8 @@
   "profiles": {
     "ConsoleApp1": {
       "commandName": "Project",
-      "nativeDebugging": true
+      "nativeDebugging": true,
+      "sqlDebugging": false
     }
   }
 }

@@ -6,6 +6,11 @@ bool __stdcall SetConfiguration(void* rawConfig, unsigned int rawConfigBytes)
     return true;
 }
 
+bool __stdcall SetConfigurationRaw(void* rawConfig, unsigned int rawConfigBytes)
+{
+    return true;
+}
+
 BOOL APIENTRY DllMain( HMODULE hModule,
                        DWORD  ul_reason_for_call,
                        LPVOID lpReserved
