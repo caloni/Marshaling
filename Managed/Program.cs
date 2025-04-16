@@ -1,8 +1,20 @@
-﻿using System.Net;
-using System.Net.Sockets;
-using System.Runtime.InteropServices;
-using System.Security.Cryptography;
+﻿using System.Runtime.InteropServices;
 using static Program.Config;
+
+[StructLayout(LayoutKind.Sequential)]
+public struct Inner
+{
+    public int count;
+}
+
+[StructLayout(LayoutKind.Sequential)]
+public struct Sample
+{
+    public Inner inner;
+
+    [MarshalAs(UnmanagedType.ByValArray, SizeConst = 1)]
+    public int[] values;
+}
 
 namespace Program
 {
@@ -38,12 +50,32 @@ namespace Program
         [DllImport("Unmanaged", CallingConvention = CallingConvention.StdCall)]
         public static extern bool SetConfigurationRaw(IntPtr config, uint bytes);
 
+        [DllImport("Unmanaged", CallingConvention = CallingConvention.StdCall)]
+        internal static extern bool WireGuardSetConfiguration(IntPtr adapter, IntPtr wireGuardConfig, UInt32 bytes);
     }
 
     public class Program
     {
+        public static void CustomMarshaler()
+        {
+            Sample sample = new Sample
+            {
+                inner = new Inner { count = 3 },
+                values = new int[] { 10, 20, 30 }
+            };
+
+            ICustomMarshaler marshaler = VariableLengthArrayMarshaler.GetInstance("YourNamespace.Sample;inner.count");
+            IntPtr nativePtr = marshaler.MarshalManagedToNative(sample);
+
+            // Pass nativePtr to unmanaged code...
+
+            // After usage, clean up
+            marshaler.CleanUpNativeData(nativePtr);
+        }
         public static void Main(string[] args)
         {
+            CustomMarshaler();
+
             string architecture = IntPtr.Size == 8 ? "x64" : "x86";
             NativeMethods.SetDllDirectory(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, architecture));
             var config = new CONFIG()
@@ -67,6 +99,8 @@ namespace Program
 
                 // Pass 'ptr' to the native DLL function
                 NativeMethods.SetConfigurationRaw(ptr, ptrSize);
+
+                NativeMethods.WireGuardSetConfiguration(ptr, ptr, (uint)Marshal.SizeOf<CONFIG>());
             }
             finally
             {
